@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Important Questions Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f0f23;
+            color: #e2e8f0;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* AI-themed animated background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
+        }
+
+        .neural-network {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+        }
+
+        .node {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #64ffda;
+            border-radius: 50%;
+            animation: pulse-node 3s ease-in-out infinite;
+        }
+
+        .connection {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #64ffda, transparent);
+            animation: data-flow 2s linear infinite;
+        }
+
+        @keyframes pulse-node {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+
+        @keyframes data-flow {
+            0% { opacity: 0; transform: scaleX(0); }
+            50% { opacity: 1; transform: scaleX(1); }
+            100% { opacity: 0; transform: scaleX(0); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 0;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            animation: float 3s ease-in-out infinite;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        .main-card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .main-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #64ffda, transparent);
+        }
+
+        .form-section {
+            padding: 40px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #f1f5f9;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .file-upload-area {
+            border: 2px dashed rgba(148, 163, 184, 0.3);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .file-upload-area:hover {
+            border-color: #64ffda;
+            background: rgba(100, 255, 218, 0.05);
+        }
+
+        .file-upload-area.dragover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            transform: scale(1.02);
+        }
+
+        .file-input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .upload-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 53%, 80%, 100% { transform: translate3d(0,0,0); }
+            40%, 43% { transform: translate3d(0,-8px,0); }
+            70% { transform: translate3d(0,-4px,0); }
+            90% { transform: translate3d(0,-2px,0); }
+        }
+
+        .upload-text {
+            font-size: 1.1rem;
+            color: #f1f5f9;
+            margin-bottom: 8px;
+        }
+
+        .upload-subtext {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .config-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .config-table th {
+            background: linear-gradient(135deg, #1e293b, #334155);
+            color: #f1f5f9;
+            padding: 16px;
+            font-weight: 600;
+            text-align: left;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .config-table td {
+            padding: 16px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .config-table tr:hover {
+            background: rgba(100, 255, 218, 0.05);
+        }
+
+        .config-input {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border: 2px solid rgba(100, 255, 218, 0.3);
+            border-radius: 12px;
+            padding: 14px 18px;
+            color: #f1f5f9;
+            font-size: 16px;
+            font-weight: 600;
+            width: 120px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .config-input::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(100, 255, 218, 0.1), transparent);
+            transition: left 0.6s;
+        }
+
+        .config-input:hover::before {
+            left: 100%;
+        }
+
+        .config-input:hover {
+            border-color: #64ffda;
+            box-shadow: 0 0 20px rgba(100, 255, 218, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .config-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2), 0 0 30px rgba(100, 255, 218, 0.3);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .btn-secondary {
+            background: rgba(148, 163, 184, 0.1);
+            color: #f1f5f9;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(148, 163, 184, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 16px;
+            padding: 16px 32px;
+            width: 100%;
+            justify-content: center;
+            margin-top: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading-section {
+            display: none;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .loading-section.active {
+            display: block;
+        }
+
+        .ai-loader {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            position: relative;
+        }
+
+        .ai-loader::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 3px solid rgba(100, 255, 218, 0.2);
+            border-radius: 50%;
+            border-top-color: #64ffda;
+            animation: spin 1s linear infinite;
+        }
+
+        .ai-loader::after {
+            content: '🤖';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .loading-text {
+            font-size: 1.3rem;
+            color: #f1f5f9;
+            margin-bottom: 12px;
+        }
+
+        .loading-subtext {
+            color: #94a3b8;
+            font-size: 1rem;
+        }
+
+        .results-section {
+            display: none;
+            background: rgba(15, 23, 42, 0.6);
+            border-top: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .results-section.active {
+            display: block;
+        }
+
+        .results-header {
+            padding: 40px 40px 0;
+            text-align: center;
+        }
+
+        .success-badge {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            animation: success-pop 0.6s ease;
+        }
+
+        @keyframes success-pop {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .results-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 12px;
+        }
+
+        .results-subtitle {
+            color: #94a3b8;
+            margin-bottom: 40px;
+        }
+
+        .questions-container {
+            padding: 0 40px 40px;
+        }
+
+        .question-card {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUp 0.6s ease forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .question-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .question-badges {
+            display: flex;
+            gap: 12px;
+        }
+
+        .difficulty-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .difficulty-easy {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .difficulty-medium {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .difficulty-hard {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .marks-badge {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #e2e8f0;
+            padding-left: 12px;
+        }
+
+        .stats-bar {
+            background: rgba(15, 23, 42, 0.8);
+            padding: 24px 40px;
+            border-top: 1px solid rgba(148, 163, 184, 0.1);
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .form-section,
+            .questions-container {
+                padding: 20px;
+            }
+            
+            .config-input {
+                width: 80px;
+            }
+            
+            .stats-bar {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation">
+        <div class="neural-network" id="neuralNetwork"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">🤖</div>
+            <h1>AI Important Questions Generator</h1>
+            <p class="subtitle">Powered by Advanced Machine Learning Algorithms</p>
+        </div>
+
+        <div class="main-card">
+            <div class="form-section">
+                <form id="uploadForm">
+                    <div class="section-title">
+                        <div class="section-icon">📄</div>
+                        Document Upload
+                    </div>
+                    
+                    <div class="file-upload-area" id="fileUploadArea">
+                        <input type="file" class="file-input" name="file" required id="fileInput">
+                        <div class="upload-icon">📤</div>
+                        <div class="upload-text">Drop your document here or click to browse</div>
+                        <div class="upload-subtext">Supports PDF, DOC, DOCX, TXT files</div>
+                    </div>
+
+                    <div class="section-title">
+                        <div class="section-icon">⚙️</div>
+                        Question Configuration
+                    </div>
+                    
+                    <table class="config-table" id="configTable">
+                        <thead>
+                            <tr>
+                                <th>Marks per Question</th>
+                                <th>Number of Questions</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="number" class="config-input marks" value="2" min="1" required></td>
+                                <td><input type="number" class="config-input counts" value="3" min="1" required></td>
+                                <td>
+                                    <button type="button" class="btn btn-secondary" onclick="removeRow(this)">
+                                        🗑️ Remove
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <button type="button" class="btn btn-secondary" id="addRow">
+                        ➕ Add Configuration
+                    </button>
+
+                    <button type="submit" class="btn btn-primary" id="generateBtn">
+                        <span>🚀 Generate Questions with AI</span>
+                    </button>
+                </form>
+            </div>
+
+            <div class="loading-section" id="loadingSection">
+                <div class="ai-loader"></div>
+                <div class="loading-text">AI Processing Your Document...</div>
+                <div class="loading-subtext">Analyzing content and generating intelligent questions</div>
+            </div>
+
+            <div class="results-section" id="resultsSection">
+                <div class="results-header">
+                    <div class="success-badge">✅</div>
+                    <h2 class="results-title">Questions Generated Successfully</h2>
+                    <p class="results-subtitle">Your AI-powered important questions are ready</p>
+                </div>
+                
+                <div class="questions-container" id="questionsContainer"></div>
+                
+                <div class="stats-bar" id="statsBar">
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalQuestions">0</div>
+                        <div class="stat-label">Total Questions</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalMarks">0</div>
+                        <div class="stat-label">Total Marks</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="processingTime">2.3s</div>
+                        <div class="stat-label">Processing Time</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Neural network background animation
+        function createNeuralNetwork() {
+            const network = document.getElementById('neuralNetwork');
+            const nodes = 15;
+            
+            for (let i = 0; i < nodes; i++) {
+                const node = document.createElement('div');
+                node.className = 'node';
+                node.style.left = Math.random() * 100 + '%';
+                node.style.top = Math.random() * 100 + '%';
+                node.style.animationDelay = Math.random() * 3 + 's';
+                network.appendChild(node);
+                
+                if (i > 0 && Math.random() > 0.6) {
+                    const connection = document.createElement('div');
+                    connection.className = 'connection';
+                    connection.style.left = Math.random() * 100 + '%';
+                    connection.style.top = Math.random() * 100 + '%';
+                    connection.style.width = Math.random() * 200 + 50 + 'px';
+                    connection.style.transform = `rotate(${Math.random() * 360}deg)`;
+                    connection.style.animationDelay = Math.random() * 2 + 's';
+                    network.appendChild(connection);
+                }
+            }
+        }
+
+        // Initialize neural network
+        createNeuralNetwork();
+
+        // File upload handling
+        const fileInput = document.getElementById('fileInput');
+        const fileUploadArea = document.getElementById('fileUploadArea');
+        const uploadForm = document.getElementById('uploadForm');
+        const loadingSection = document.getElementById('loadingSection');
+        const resultsSection = document.getElementById('resultsSection');
+        const generateBtn = document.getElementById('generateBtn');
+
+        // Drag and drop functionality
+        fileUploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileUploadArea.classList.add('dragover');
+        });
+
+        fileUploadArea.addEventListener('dragleave', () => {
+            fileUploadArea.classList.remove('dragover');
+        });
+
+        fileUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileUploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                updateFileDisplay(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                updateFileDisplay(e.target.files[0]);
+            }
+        });
+
+        function updateFileDisplay(file) {
+            const uploadIcon = document.querySelector('.upload-icon');
+            const uploadText = document.querySelector('.upload-text');
+            const uploadSubtext = document.querySelector('.upload-subtext');
+            
+            uploadIcon.textContent = '✅';
+            uploadText.textContent = file.name;
+            uploadSubtext.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB - Ready to process`;
+            fileUploadArea.style.borderColor = '#10b981';
+            fileUploadArea.style.background = 'rgba(16, 185, 129, 0.1)';
+        }
+
+        // Add/Remove table rows
+        document.getElementById('addRow').addEventListener('click', () => {
+            const tbody = document.querySelector('#configTable tbody');
+            const row = tbody.insertRow();
+            row.innerHTML = `
+                <td><input type="number" class="config-input marks" value="5" min="1" required></td>
+                <td><input type="number" class="config-input counts" value="2" min="1" required></td>
+                <td>
+                    <button type="button" class="btn btn-secondary" onclick="removeRow(this)">
+                        🗑️ Remove
+                    </button>
+                </td>
+            `;
+            
+            // Animation
+            row.style.opacity = '0';
+            row.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+                row.style.transition = 'all 0.3s ease';
+                row.style.opacity = '1';
+                row.style.transform = 'translateY(0)';
+            }, 50);
+        });
+
+        function removeRow(button) {
+            const row = button.closest('tr');
+            const tbody = row.parentNode;
+            if (tbody.children.length > 1) {
+                row.style.transition = 'all 0.3s ease';
+                row.style.opacity = '0';
+                row.style.transform = 'translateX(-100px)';
+                setTimeout(() => row.remove(), 300);
+            }
+        }
+
+        // Form submission
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const startTime = Date.now();
+            
+            // Show loading
+            loadingSection.classList.add('active');
+            resultsSection.classList.remove('active');
+            generateBtn.disabled = true;
+            
+            try {
+                const formData = new FormData();
+                const file = fileInput.files[0];
+                formData.append('file', file);
+                
+                // Collect configuration
+                const rows = Array.from(document.querySelectorAll('#configTable tbody tr'));
+                const config = rows.map(row => ({
+                    mark: parseInt(row.querySelector('.marks').value, 10),
+                    count: parseInt(row.querySelector('.counts').value, 10)
+                }));
+                formData.append('config', JSON.stringify(config));
+                
+                // API call
+                const response = await fetch('http://127.0.0.1:8000/generate', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                const processingTime = ((Date.now() - startTime) / 1000).toFixed(1);
+                
+                // Show results
+                displayResults(data.questions, processingTime);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error generating questions. Please try again.');
+            } finally {
+                loadingSection.classList.remove('active');
+                generateBtn.disabled = false;
+            }
+        });
+
+        function displayResults(questions, processingTime) {
+            const container = document.getElementById('questionsContainer');
+            const totalQuestions = document.getElementById('totalQuestions');
+            const totalMarks = document.getElementById('totalMarks');
+            const processingTimeEl = document.getElementById('processingTime');
+            
+            container.innerHTML = '';
+            
+            let totalMarksCount = 0;
+            
+            questions.forEach((question, index) => {
+                setTimeout(() => {
+                    const card = document.createElement('div');
+                    card.className = 'question-card';
+                    card.style.animationDelay = `${index * 0.1}s`;
+                    
+                    const difficulty = question.level || 'Medium';
+                    const difficultyClass = `difficulty-${difficulty.toLowerCase()}`;
+                    
+                    card.innerHTML = `
+                        <div class="question-header">
+                            <div class="question-badges">
+                                <span class="difficulty-badge ${difficultyClass}">${difficulty}</span>
+                            </div>
+                            <span class="marks-badge">${question.marks} Mark${question.marks > 1 ? 's' : ''}</span>
+                        </div>
+                        <div class="question-text">${question.text}</div>
+                    `;
+                    
+                    container.appendChild(card);
+                    totalMarksCount += question.marks;
+                }, index * 150);
+            });
+            
+            // Update stats
+            setTimeout(() => {
+                totalQuestions.textContent = questions.length;
+                totalMarks.textContent = totalMarksCount;
+                processingTimeEl.textContent = processingTime + 's';
+                resultsSection.classList.add('active');
+            }, questions.length * 150 + 300);
+        }
+
+        // Demo data for testing
+        function generateDemoQuestions() {
+            return {
+                questions: [
+                    { level: "Easy", marks: 2, text: "Define artificial intelligence and explain its significance in modern technology." },
+                    { level: "Medium", marks: 5, text: "Compare and contrast supervised and unsupervised machine learning algorithms with suitable examples." },
+                    { level: "Hard", marks: 10, text: "Analyze the ethical implications of AI decision-making systems in healthcare and propose solutions for bias mitigation." },
+                    { level: "Medium", marks: 5, text: "Explain the concept of neural networks and their role in deep learning applications." },
+                    { level: "Easy", marks: 2, text: "What are the key components of a machine learning pipeline?" }
+                ]
+            };
+        }
+
+        // Uncomment for demo
+        // setTimeout(() => {
+        //     const demoData = generateDemoQuestions();
+        //     displayResults(demoData.questions, '2.3');
+        // }, 3000);
+    </script>
+</body>
+</html>
