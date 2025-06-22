@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI for Predictive Text</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated background particles */
+        .bg-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(0, 255, 200, 0.15);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        .particle:nth-child(1) {
+            width: 20px;
+            height: 20px;
+            left: 10%;
+            animation-delay: 0s;
+            animation-duration: 15s;
+        }
+
+        .particle:nth-child(2) {
+            width: 15px;
+            height: 15px;
+            left: 20%;
+            animation-delay: 2s;
+            animation-duration: 18s;
+        }
+
+        .particle:nth-child(3) {
+            width: 25px;
+            height: 25px;
+            left: 30%;
+            animation-delay: 4s;
+            animation-duration: 22s;
+        }
+
+        .particle:nth-child(4) {
+            width: 18px;
+            height: 18px;
+            left: 40%;
+            animation-delay: 6s;
+            animation-duration: 16s;
+        }
+
+        .particle:nth-child(5) {
+            width: 12px;
+            height: 12px;
+            left: 50%;
+            animation-delay: 8s;
+            animation-duration: 20s;
+        }
+
+        .particle:nth-child(6) {
+            width: 22px;
+            height: 22px;
+            left: 60%;
+            animation-delay: 10s;
+            animation-duration: 17s;
+        }
+
+        .particle:nth-child(7) {
+            width: 16px;
+            height: 16px;
+            left: 70%;
+            animation-delay: 12s;
+            animation-duration: 19s;
+        }
+
+        .particle:nth-child(8) {
+            width: 28px;
+            height: 28px;
+            left: 80%;
+            animation-delay: 14s;
+            animation-duration: 21s;
+        }
+
+        .particle:nth-child(9) {
+            width: 14px;
+            height: 14px;
+            left: 90%;
+            animation-delay: 16s;
+            animation-duration: 23s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Glassmorphism container */
+        .container {
+            background: rgba(15, 20, 35, 0.85);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(0, 255, 200, 0.2);
+            border-radius: 24px;
+            padding: 3rem;
+            width: 90%;
+            max-width: 700px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #00ffc8;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 30px rgba(0, 255, 200, 0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+            letter-spacing: -0.02em;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 20px rgba(0, 255, 200, 0.4);
+            }
+            to {
+                text-shadow: 0 0 40px rgba(0, 255, 200, 0.8), 0 0 60px rgba(0, 255, 200, 0.3);
+            }
+        }
+
+        .input-group {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        textarea {
+            width: 100%;
+            height: 180px;
+            padding: 1.5rem;
+            border: 2px solid transparent;
+            border-radius: 16px;
+            background: rgba(20, 25, 40, 0.9);
+            color: #e8eaed;
+            font-size: 1.1rem;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            resize: vertical;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        textarea:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(0, 255, 200, 0.15);
+            background: rgba(20, 25, 40, 0.95);
+            border-color: rgba(0, 255, 200, 0.5);
+        }
+
+        textarea::placeholder {
+            color: #9aa0a6;
+            opacity: 0.8;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        button {
+            background: linear-gradient(135deg, #00d4aa, #00ffc8);
+            color: #0f1419;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0, 212, 170, 0.4);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 212, 170, 0.6);
+            background: linear-gradient(135deg, #00ffc8, #00d4aa);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .output-container {
+            position: relative;
+        }
+
+        .output-label {
+            color: #00ffc8;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            opacity: 0.95;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        pre {
+            background: rgba(10, 15, 25, 0.8);
+            backdrop-filter: blur(15px);
+            color: #f8f9fa;
+            padding: 2rem;
+            border-radius: 16px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 1rem;
+            line-height: 1.7;
+            min-height: 120px;
+            border: 1px solid rgba(0, 255, 200, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        pre.loading {
+            background: rgba(10, 15, 25, 0.9);
+        }
+
+        .loading-animation {
+            display: inline-block;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            color: #9aa0a6;
+            font-style: italic;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .typing-indicator.active {
+            display: flex;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #00ffc8;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem;
+                padding: 2rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            textarea {
+                height: 150px;
+                padding: 1rem;
+            }
+
+            button {
+                padding: 0.8rem 2rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="container">
+        <h1>✨ AI for Predictive Text</h1>
+        
+        <div class="input-group">
+            <textarea 
+                id="input" 
+                placeholder="Type your prompt here and let AI complete your thoughts..."
+                maxlength="2000"
+            ></textarea>
+        </div>
+
+        <div class="button-container">
+            <button id="send">🚀 Generate Prediction</button>
+        </div>
+
+        <div class="output-container">
+            <div class="output-label">AI Response:</div>
+            <div class="typing-indicator" id="typingIndicator">
+                <span>AI is thinking</span>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+            <pre id="output">Ready to generate your AI prediction...</pre>
+        </div>
+    </div>
+
+    <script>
+        const inputEl = document.getElementById('input');
+        const btn = document.getElementById('send');
+        const out = document.getElementById('output');
+        const typingIndicator = document.getElementById('typingIndicator');
+
+        // Add input validation and character counter
+        inputEl.addEventListener('input', () => {
+            const remaining = 2000 - inputEl.value.length;
+            if (remaining < 100) {
+                inputEl.style.borderColor = remaining < 0 ? '#ff4081' : '#ffab40';
+            } else {
+                inputEl.style.borderColor = 'transparent';
+            }
+        });
+
+        // Enhanced button click handler with better UX
+        btn.addEventListener('click', async () => {
+            const prompt = inputEl.value.trim();
+            
+            if (!prompt) {
+                animateError('Please enter some text to predict!');
+                return;
+            }
+
+            if (prompt.length > 2000) {
+                animateError('Text is too long. Please keep it under 2000 characters.');
+                return;
+            }
+
+            // Start loading state
+            btn.disabled = true;
+            btn.textContent = '🔄 Generating...';
+            typingIndicator.classList.add('active');
+            out.style.display = 'none';
+
+            try {
+                const response = await fetch('http://localhost:8080/api/predict', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ prompt })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                // Simulate realistic typing delay
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                displayResponse(data.completion || 'No response received');
+                
+            } catch (error) {
+                console.error('Prediction error:', error);
+                displayError(`Connection failed: ${error.message}`);
+            } finally {
+                // Reset button state
+                btn.disabled = false;
+                btn.textContent = '🚀 Generate Prediction';
+                typingIndicator.classList.remove('active');
+                out.style.display = 'block';
+            }
+        });
+
+        // Allow Enter key to submit (Ctrl+Enter for new line)
+        inputEl.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                btn.click();
+            }
+        });
+
+        function displayResponse(text) {
+            out.className = '';
+            out.style.color = '#f8f9fa';
+            typeWriter(text, out);
+        }
+
+        function displayError(message) {
+            out.className = '';
+            out.style.color = '#ff4081';
+            out.textContent = `⚠️ ${message}`;
+            out.style.animation = 'shake 0.5s ease-in-out';
+        }
+
+        function animateError(message) {
+            inputEl.style.animation = 'shake 0.5s ease-in-out';
+            inputEl.style.borderColor = '#ff4757';
+            
+            // Show temporary error message
+            const errorDiv = document.createElement('div');
+            errorDiv.textContent = message;
+            errorDiv.style.cssText = `
+                position: absolute;
+                top: -40px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #ff4757;
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 8px;
+                font-size: 0.9rem;
+                z-index: 1000;
+                animation: fadeInOut 3s ease-in-out;
+            `;
+            
+            inputEl.parentNode.style.position = 'relative';
+            inputEl.parentNode.appendChild(errorDiv);
+            
+            setTimeout(() => {
+                errorDiv.remove();
+                inputEl.style.animation = '';
+                inputEl.style.borderColor = 'transparent';
+            }, 3000);
+        }
+
+        function typeWriter(text, element, speed = 30) {
+            element.textContent = '';
+            let i = 0;
+            
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            
+            type();
+        }
+
+        // Add CSS for animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-5px); }
+                75% { transform: translateX(5px); }
+            }
+            
+            @keyframes fadeInOut {
+                0%, 100% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+                20%, 80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
