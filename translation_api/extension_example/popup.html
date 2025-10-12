@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body {
+            width: 300px;
+            padding: 16px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        
+        .info {
+            background: #e7f3ff;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+        
+        .instructions {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .status {
+            margin-top: 12px;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+            margin-top: 8px;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>🌐 Text Translator</h2>
+    </div>
+    
+    <div class="info">
+        This extension translates selected text using your FastAPI translation service.
+    </div>
+    
+    <div class="instructions">
+        <strong>How to use:</strong>
+        <ol>
+            <li>Make sure your FastAPI server is running</li>
+            <li>Select any text on a webpage</li>
+            <li>A translation popup will appear</li>
+            <li>Choose languages and click "Translate"</li>
+        </ol>
+    </div>
+    
+    <button id="testConnection">Test API Connection</button>
+    <div id="status"></div>
+    
+    <script src="popup.js"></script>
+</body>
+</html>
