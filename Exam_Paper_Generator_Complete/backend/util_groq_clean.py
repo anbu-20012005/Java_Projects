@@ -6,7 +6,7 @@ import os
 
 # === CONFIGURATION ===
 GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
-API_KEY = "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"
+API_KEY = "YOUR_API_KEY"
 
 headers = {
     "Authorization": f"Bearer {API_KEY}",
